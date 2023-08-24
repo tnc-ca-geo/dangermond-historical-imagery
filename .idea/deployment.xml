@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="apl web server">
+    <serverData>
+      <paths name="apl portal">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="apl web server">
+        <serverdata>
+          <mappings>
+            <mapping deploy="\DangermondPreserve\HistoricalImagery" local="$PROJECT_DIR$" web="/DangermondPreserve/HistoricalImagery" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="apl web server rc">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="apl web server root">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
