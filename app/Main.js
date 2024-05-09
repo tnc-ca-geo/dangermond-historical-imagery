@@ -1,18 +1,18 @@
 /*
-  Copyright 2020 Esri
+ Copyright 2020 Esri
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 define([
   "calcite",
@@ -40,6 +40,7 @@ define([
   "esri/layers/Layer",
   "esri/layers/GraphicsLayer",
   "esri/geometry/Extent",
+  "esri/geometry/Polygon",
   "esri/geometry/geometryEngine",
   "esri/Graphic",
   "esri/widgets/Home",
@@ -48,18 +49,18 @@ define([
   "esri/widgets/ScaleBar",
   "esri/widgets/Compass",
   "esri/widgets/Expand"
-], function(calcite, declare, ApplicationBase, i18n, itemUtils, domHelper,
-            Color, colors, number, locale, on, mouse, query, domNodeList, domConstruct,
-            IdentityManager, Evented, watchUtils, promiseUtils,
-            Portal, EsriMap, MapView, Layer, GraphicsLayer, Extent, geometryEngine,
-            Graphic, Home, Legend, Print, ScaleBar, Compass, Expand){
+], function (calcite, declare, ApplicationBase, i18n, itemUtils, domHelper,
+             Color, colors, number, locale, on, mouse, query, domNodeList, domConstruct,
+             IdentityManager, Evented, watchUtils, promiseUtils,
+             Portal, EsriMap, MapView, Layer, GraphicsLayer, Extent, Polygon, geometryEngine,
+             Graphic, Home, Legend, Print, ScaleBar, Compass, Expand) {
 
   return declare([Evented], {
 
     /**
      *
      */
-    constructor: function(){
+    constructor: function () {
       // APPLICATION BASE //
       this.base = null;
       // CALCITE WEB //
@@ -70,8 +71,8 @@ define([
      *
      * @param base
      */
-    init: function(base){
-      if(!base){
+    init: function (base) {
+      if (!base) {
         console.error("ApplicationBase is not defined");
         return;
       }
@@ -83,32 +84,32 @@ define([
       const results = base.results;
 
       const allMapAndSceneItems = results.webMapItems.concat(results.webSceneItems);
-      const validMapItems = allMapAndSceneItems.map(function(response){
+      const validMapItems = allMapAndSceneItems.map(function (response) {
         return response.value;
       });
 
       const firstItem = validMapItems[0];
-      if(!firstItem){
+      if (!firstItem) {
         console.error("Could not load an item to display");
         return;
       }
       config.title = (config.title || itemUtils.getItemTitle(firstItem));
       domHelper.setPageTitle(config.title);
 
-      if(firstItem.description){
+      if (firstItem.description) {
         document.getElementById("app-description-panel").innerHTML = firstItem.description;
       }
 
       const viewProperties = itemUtils.getConfigViewProperties(config);
       viewProperties.container = "view-container";
-      viewProperties.constraints = { snapToZoom: false };
+      viewProperties.constraints = {snapToZoom: false};
       viewProperties.center = [-120.44840133926529, 34.506529904857615];
       viewProperties.scale = 81773.4641244801;
 
       const portalItem = this.base.results.applicationItem.value;
       const appProxies = (portalItem && portalItem.appProxies) ? portalItem.appProxies : null;
 
-      itemUtils.createMapFromItem({ item: firstItem, appProxies: appProxies }).then((map) => {
+      itemUtils.createMapFromItem({item: firstItem, appProxies: appProxies}).then((map) => {
         viewProperties.map = map;
         itemUtils.createView(viewProperties).then((view) => {
           view.when(() => {
@@ -124,23 +125,23 @@ define([
      * @param item
      * @param view
      */
-    viewReady: function(config, item, view){
+    viewReady: function (config, item, view) {
 
       // TITLE //
       document.getElementById("app-title-node").innerHTML = config.title;
 
       // LOADING //
-      const updating_node = domConstruct.create("div", { className: "view-loading-node loader" });
-      domConstruct.create("div", { className: "loader-bars" }, updating_node);
-      domConstruct.create("div", { className: "loader-text font-size--3 text-white", innerHTML: "Updating..." }, updating_node);
+      const updating_node = domConstruct.create("div", {className: "view-loading-node loader"});
+      domConstruct.create("div", {className: "loader-bars"}, updating_node);
+      domConstruct.create("div", {className: "loader-text font-size--3 text-white", innerHTML: "Updating..."}, updating_node);
       view.ui.add(updating_node, "bottom-right");
       watchUtils.init(view, "updating", (updating) => {
         updating_node.classList.toggle("is-active", updating);
       });
 
       // PANEL TOGGLE //
-      if(query(".pane-toggle-target").length > 0){
-        const panelToggleBtn = domConstruct.create("div", { className: "panel-toggle icon-ui-left-triangle-arrow icon-ui-flush font-size-1", title: "Toggle Left Panel" }, view.root);
+      if (query(".pane-toggle-target").length > 0) {
+        const panelToggleBtn = domConstruct.create("div", {className: "panel-toggle icon-ui-left-triangle-arrow icon-ui-flush font-size-1", title: "Toggle Left Panel"}, view.root);
         panelToggleBtn.addEventListener("click", () => {
           panelToggleBtn.classList.toggle("icon-ui-left-triangle-arrow");
           panelToggleBtn.classList.toggle("icon-ui-right-triangle-arrow");
@@ -153,19 +154,19 @@ define([
       return this.initializeUserSignIn().catch(console.warn).then(() => {
 
         // HOME //
-        view.ui.add(new Home({ view: view }), { position: "top-left", index: 0 });
+        view.ui.add(new Home({view: view}), {position: "top-left", index: 0});
 
         // COMPASS //
-        view.ui.add(new Compass({ view: view }), { position: "top-left" });
+        view.ui.add(new Compass({view: view}), {position: "top-left"});
 
         // SCALEBAR //
-        view.ui.add(new ScaleBar({ view: view, unit: 'dual' }), { position: "bottom-left", index: 0 });
+        view.ui.add(new ScaleBar({view: view, unit: 'dual'}), {position: "bottom-left", index: 0});
 
         // PRINT //
         const print = new Print({
           view: view,
           printServiceUrl: (config.helperServices.printTask.url || this.base.portal.helperServices.printTask.url),
-          templateOptions: { title: config.title, author: this.base.portal.user ? this.base.portal.user.fullName : "" }
+          templateOptions: {title: config.title, author: this.base.portal.user ? this.base.portal.user.fullName : ""}
         }, "print-node");
         this.updatePrintOptions = (title, author, copyright) => {
           print.templateOptions.title = title || print.templateOptions.title;
@@ -187,7 +188,7 @@ define([
      *
      * @returns {*}
      */
-    initializeUserSignIn: function(){
+    initializeUserSignIn: function () {
 
       const checkSignInStatus = () => {
         return IdentityManager.checkSignInStatus(this.base.portal.url).then(userSignIn).catch(userSignOut).then();
@@ -196,7 +197,7 @@ define([
 
       // SIGN IN //
       const userSignIn = () => {
-        this.base.portal = new Portal({ url: this.base.config.portalUrl, authMode: "immediate" });
+        this.base.portal = new Portal({url: this.base.config.portalUrl, authMode: "immediate"});
         return this.base.portal.load().then(() => {
           this.emit("portal-user-change", {});
         }).catch(console.warn).then();
@@ -220,7 +221,7 @@ define([
      *
      * @param view
      */
-    initializeHistoricalImagery: function(view){
+    initializeHistoricalImagery: function (view) {
 
       this.initializeOverviewMap(view).then(() => {
         this.initializeZoomWindow(view);
@@ -238,20 +239,20 @@ define([
           })
 
           /*const imageryLayersInfos = view.map.layers.reduce((infos, layer) => {
-            if(layer.title.startsWith('Preserve - ')){
-              const year = Number(layer.title.split(' - ')[1]);
-              infos.years.push(year);
-              infos.layers.push(layer);
-              infos.layerByYear[year] = layer;
-            }
-            return infos;
-          }, { years: [], layers: [], layerByYear: {} });
-          const years = imageryLayersInfos.years.sort();
-          const imageryLayers = imageryLayersInfos.layers;
+           if(layer.title.startsWith('Preserve - ')){
+           const year = Number(layer.title.split(' - ')[1]);
+           infos.years.push(year);
+           infos.layers.push(layer);
+           infos.layerByYear[year] = layer;
+           }
+           return infos;
+           }, { years: [], layers: [], layerByYear: {} });
+           const years = imageryLayersInfos.years.sort();
+           const imageryLayers = imageryLayersInfos.layers;
 
-          const imageryLayersByYear = years.reduce((byYear, year) => {
-            return byYear.set(year, imageryLayersInfos.layerByYear[year]);
-          }, new Map());*/
+           const imageryLayersByYear = years.reduce((byYear, year) => {
+           return byYear.set(year, imageryLayersInfos.layerByYear[year]);
+           }, new Map());*/
 
           const _getImageryLayerYear = (layer) => {
             return Number(layer.title.split(' - ')[1]);
@@ -286,10 +287,10 @@ define([
           this.displayLayerDetails = year => {
             const imageryLayer = this.findImageryLayerByYear(year);
             const portalItem = imageryLayer.portalItem;
-            if(portalItem){
+            if (portalItem) {
               layerDetailsTitle.innerHTML = portalItem.title;
               layerDetailsDescription.innerHTML = portalItem.description;
-              calcite.bus.emit('modal:open', { id: 'layer-details-dialog' });
+              calcite.bus.emit('modal:open', {id: 'layer-details-dialog'});
             } else {
               console.error("Can't find Layer PortalItem for year: ", year);
             }
@@ -309,13 +310,12 @@ define([
      * @param view
      * @param imageryFootprintsLayer
      */
-    initializeItemsList: function(view, imageryFootprintsLayer){
-
+    initializeItemsList: function (view, imageryFootprintsLayer) {
 
       imageryFootprintsLayer.queryFeatures({
-        outFields: ["*"],
         where: "1=1",
-        orderByFields: ["Year"],
+        outFields: ["Year", "PercentCoverage", "ColorType"],
+        orderByFields: ["Year ASC"],
         returnGeometry: true
       }).then(featureSet => {
         domConstruct.empty("items-list");
@@ -340,7 +340,7 @@ define([
         // ENTER //
         query(".item-node").on(mouse.enter, (evt) => {
           const feature = featureByNode.get(evt.target);
-          if(feature){
+          if (feature) {
             this.updateFootprint(feature.geometry.clone());
           }
         });
@@ -349,11 +349,11 @@ define([
         this.disableExtentIntersect = (extent) => {
           query(".item-node").forEach(node => {
             const feature = featureByNode.get(node);
-            if(feature){
+            if (feature) {
               node.classList.toggle("btn-disabled", !extent.intersects(feature.geometry));
             }
           });
-          document.getElementById("items-list-count").innerHTML = `${number.format(query(".item-node:not(.btn-disabled)", "items-list").length)} of ${featureCount}`;
+          document.getElementById("items-list-count").innerHTML = `${ number.format(query(".item-node:not(.btn-disabled)", "items-list").length) } of ${ featureCount }`;
         };
 
         this.initializeViewExtentEvents();
@@ -367,7 +367,7 @@ define([
      * @param feature
      * @param selected
      */
-    addItemNode: function(view, feature, selected){
+    addItemNode: function (view, feature, selected) {
 
       // ITEM NODE //
       const itemNode = domConstruct.create("div", {
@@ -382,7 +382,7 @@ define([
         this.updateCurrentFootprint(feature.geometry.clone());
 
       });
-      if(selected){ itemNode.click(); }
+      if (selected) { itemNode.click(); }
 
       const topNode = domConstruct.create("div", {
         className: "item-top-node margin-right-1"
@@ -407,17 +407,17 @@ define([
       }, itemNode);
 
       domConstruct.create("div", {
-        innerHTML: `Type: <span class="avenir-demi">${feature.attributes.ColorType || 'n/a'}</span>`,
+        innerHTML: `Type: <span class="avenir-demi">${ feature.attributes.ColorType || 'n/a' }</span>`,
         title: "Color Type"
       }, details_node);
 
       const coverageNode = domConstruct.create("div", {
-        innerHTML: `Coverage: <span class="avenir-demi">${feature.attributes.PercentCov || 'n/a'}%</span>`
+        innerHTML: `Coverage: <span class="avenir-demi">${ feature.attributes.PercentCoverage || 'n/a' }%</span>`
       }, details_node);
 
       domConstruct.create("progress", {
         max: 100,
-        value: feature.attributes.PercentCov || 0
+        value: feature.attributes.PercentCoverage || 0
       }, coverageNode);
 
       return itemNode;
@@ -427,7 +427,7 @@ define([
      *
      * @param view
      */
-    initializeOverviewMap: function(view){
+    initializeOverviewMap: function (view) {
 
       const overviewView = new MapView({
         container: "overview-view",
@@ -436,8 +436,8 @@ define([
           layers: []
         }),
         extent: view.extent.clone().expand(1.2),
-        ui: { components: [] },
-        constraints: { snapToZoom: false }
+        ui: {components: []},
+        constraints: {snapToZoom: false}
       });
       return overviewView.when(() => {
 
@@ -477,7 +477,7 @@ define([
           }
         });
 
-        const footprintLayer = new GraphicsLayer({ title: "Footprints", graphics: [mapExtentGraphic, footprintGraphic, currentFootprintGraphic] });
+        const footprintLayer = new GraphicsLayer({title: "Footprints", graphics: [mapExtentGraphic, footprintGraphic, currentFootprintGraphic]});
         overviewView.map.add(footprintLayer);
 
         const maskGraphic = new Graphic({
@@ -491,7 +491,7 @@ define([
             }
           }
         });
-        const maskLayer = new GraphicsLayer({ title: "Mask", graphics: [maskGraphic] });
+        const maskLayer = new GraphicsLayer({title: "Mask", graphics: [maskGraphic]});
         view.map.add(maskLayer);
 
 
@@ -502,12 +502,19 @@ define([
           footprintGraphic.geometry = geometry;
         };
 
+        const _polylineToPolygon = polyline =>{
+          return new Polygon({
+            spatialReference: polyline.spatialReference,
+            rings: polyline.paths
+          });
+        }
+
         this.initializeViewExtentEvents = () => {
 
           const boundaryLayer = view.map.layers.find(layer => { return (layer.title === "Preserve Boundary"); });
           return boundaryLayer.load().then(() => {
             return boundaryLayer.queryFeatures().then(featureSet => {
-              const _boundaryPolygon = geometryEngine.geodesicBuffer(featureSet.features[0].geometry, 750.0, "meters");
+              const _boundaryPolygon = geometryEngine.geodesicBuffer(_polylineToPolygon(featureSet.features[0].geometry), 750.0, "meters");
 
               return watchUtils.init(view, "extent", extent => {
                 mapExtentGraphic.geometry = extent;
@@ -528,7 +535,7 @@ define([
      * @param view
      * @param imageryLayers
      */
-    initializeLayerOpacity: function(view, imageryLayers){
+    initializeLayerOpacity: function (view, imageryLayers) {
 
       const opacity_input = document.getElementById("opacity-input");
       opacity_input.addEventListener("input", () => {
@@ -549,7 +556,7 @@ define([
      *
      * @param view
      */
-    initializeZoomWindow: function(view){
+    initializeZoomWindow: function (view) {
 
       // ZOOM WINDOW ENABLED //
       let zoom_window_enabled = false;
@@ -559,7 +566,7 @@ define([
         className: "zoom-window-btn esri-widget--button esri-widget esri-icon esri-icon-zoom-in-magnifying-glass",
         title: "Zoom Window\n - click, hold, then drag..."
       });
-      view.ui.add(zoom_window_btn, { position: "top-right" });
+      view.ui.add(zoom_window_btn, {position: "top-right"});
 
       this.enableZoomWindowTool = (enabled) => {
         zoom_window_btn.classList.toggle("selected", enabled);
@@ -573,22 +580,22 @@ define([
       });
 
       // CONTAINER //
-      const zoom_container = domConstruct.create("div", { className: "zoom-view-node panel panel-dark hide" }, view.root, "first");
+      const zoom_container = domConstruct.create("div", {className: "zoom-view-node panel panel-dark hide"}, view.root, "first");
 
       // CALC WINDOW POSITION //
       const window_offset = 12;
       const zoom_window_position = (pos_evt) => {
         const top_offset = (pos_evt.y < (view.height - 200)) ? window_offset : -150 - window_offset;
         const left_offset = (pos_evt.x < (view.width - 200)) ? window_offset : -150 - window_offset;
-        zoom_container.style.setProperty('top', `${(pos_evt.y + top_offset)}px`);
-        zoom_container.style.setProperty('left', `${(pos_evt.x + left_offset)}px`);
+        zoom_container.style.setProperty('top', `${ (pos_evt.y + top_offset) }px`);
+        zoom_container.style.setProperty('left', `${ (pos_evt.x + left_offset) }px`);
       };
 
       // DISPLAY ZOOM WINDOW //
       const display_zoom_window = (position_evt) => {
         domConstruct.place(zoom_container, view.root, position_evt ? "last" : "first");
         zoom_container.classList.toggle("hide", !position_evt);
-        if(position_evt){
+        if (position_evt) {
           zoom_window_position(position_evt);
         }
       };
@@ -596,7 +603,7 @@ define([
       // MAP VIEW //
       const zoom_view = new MapView({
         container: zoom_container,
-        ui: { components: [] },
+        ui: {components: []},
         map: view.map
       });
 
@@ -612,9 +619,9 @@ define([
 
       // UPDATE ZOOM WINDOW //
       const update_zoom_window = (view_evt) => {
-        if(is_within_view(view_evt)){
+        if (is_within_view(view_evt)) {
           const map_point = view.toMap(view_evt);
-          if(map_point){
+          if (map_point) {
             last_evt = view_evt;
 
             // DISPLAY ZOOM WINDOW //
@@ -624,7 +631,7 @@ define([
             zoom_view.goTo({
               target: map_point,
               zoom: (view.zoom + zoom_level_offset)
-            }, { animate: false });
+            }, {animate: false});
 
           } else {
             // IN 3D IF NOT ON GLOBE //
@@ -640,9 +647,9 @@ define([
 
       // POINTER DOWN //
       view.on("pointer-down", (pointer_down_evt) => {
-        if(zoom_window_enabled){
+        if (zoom_window_enabled) {
           pointer_down_evt.stopPropagation();
-          if(pointer_down_evt.button === 0){
+          if (pointer_down_evt.button === 0) {
             update_zoom_window(pointer_down_evt);
           }
         }
@@ -650,9 +657,9 @@ define([
 
       // DRAG //
       view.on("drag", (drag_evt) => {
-        if(zoom_window_enabled){
+        if (zoom_window_enabled) {
           drag_evt.stopPropagation();
-          switch(drag_evt.action){
+          switch (drag_evt.action) {
             case "update":
               update_zoom_window(drag_evt);
               break;
@@ -664,14 +671,14 @@ define([
 
       // POINTER UP //
       view.on("pointer-up", () => {
-        if(zoom_window_enabled){
+        if (zoom_window_enabled) {
           display_zoom_window();
           last_evt = null;
         }
       });
       // POINTER LEAVE //
       view.on("pointer-leave", () => {
-        if(zoom_window_enabled){
+        if (zoom_window_enabled) {
           display_zoom_window();
           last_evt = null;
         }
@@ -684,7 +691,7 @@ define([
      * @param view
      * @param imageryLayers
      */
-    initializeLayerFadeTool: function(view, imageryLayers){
+    initializeLayerFadeTool: function (view, imageryLayers) {
 
       // FADE TOOL ENABLED //
       let layer_fade_enabled = false;
@@ -694,7 +701,7 @@ define([
         className: "layer-fade-btn esri-widget--button esri-widget esri-icon esri-icon-up-down-arrows",
         title: "Layer Fade\n - hold to fade layer..."
       });
-      view.ui.add(layer_fade_btn, { position: "top-right" });
+      view.ui.add(layer_fade_btn, {position: "top-right"});
 
       this.enableLayerFadeTool = (enabled) => {
         layer_fade_btn.classList.toggle("selected", enabled);
@@ -715,7 +722,7 @@ define([
       let fade_in_handle;
       const fade_in = () => {
         fade_layer.opacity += 0.01;
-        if(fade_layer.opacity < max_opacity){
+        if (fade_layer.opacity < max_opacity) {
           fade_in_handle = setTimeout(() => { fade_in(); }, 1000 / fps);
         } else {
           this.setImageryLayerOpacity(fade_layer.opacity);
@@ -726,7 +733,7 @@ define([
       let fade_out_handle;
       const fade_out = () => {
         fade_layer.opacity -= 0.01;
-        if(fade_layer.opacity > 0.0){
+        if (fade_layer.opacity > 0.0) {
           fade_out_handle = setTimeout(() => { fade_out(); }, 1000 / fps);
         } else {
           this.setImageryLayerOpacity(fade_layer.opacity);
@@ -737,7 +744,7 @@ define([
 
       // POINTER DOWN //
       view.on("hold", (hold_evt) => {
-        if(layer_fade_enabled){
+        if (layer_fade_enabled) {
           hold_evt.stopPropagation();
           clearTimeout(fade_in_handle);
           fade_layer = this.findVisibleImageryLayer();
@@ -748,7 +755,7 @@ define([
 
       // POINTER UP //
       view.on("pointer-up", (pointer_up_evt) => {
-        if(layer_fade_enabled){
+        if (layer_fade_enabled) {
           pointer_up_evt.stopPropagation();
           clearTimeout(fade_out_handle);
           fade_in(max_opacity);
