@@ -514,6 +514,10 @@ define([
           const boundaryLayer = view.map.layers.find(layer => { return (layer.title === "Preserve Boundary"); });
           return boundaryLayer.load().then(() => {
             return boundaryLayer.queryFeatures().then(featureSet => {
+             let boundaryGeometry = featureSet.features[0].geometry;
+              if (boundaryGeometry.type === 'polyline') {
+                boundaryGeometry = _polylineToPolygon(boundaryGeometry);
+              }
               const _boundaryPolygon = geometryEngine.geodesicBuffer(_polylineToPolygon(featureSet.features[0].geometry), 750.0, "meters");
 
               return watchUtils.init(view, "extent", extent => {
@@ -524,7 +528,7 @@ define([
 
             });
           });
-        }
+        };
 
       });
 
