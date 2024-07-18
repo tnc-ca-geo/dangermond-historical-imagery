@@ -1,133 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <!-- Responsive -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <!-- End Responsive -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0 maximum-scale=1.0"/>
+    <!-- ICON -->
     <link rel="icon" href="./assets/favicon.ico" sizes="32x32" type="image/vnd.microsoft.icon">
-    <link rel="stylesheet" href="https://geoxc-apps2.bd.esri.com/support/calcite-web/1.2.5/css/calcite-web.min.css">
-    <link rel="stylesheet" href="./styles/main.css">
-    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
-    <script src="./app/dojo.js"></script>
-    <script src="https://js.arcgis.com/4.23/"></script>
-    <script>require(["Application/init"]);</script>
+    <!-- TITLE -->
+    <title class="application-title"></title>
+    <!-- META -->
+    <!--<meta property="og:title" content="">-->
+    <!--<meta property="og:description" content="">-->
+    <!--<meta property="og:url" content="https://geoxc-apps.bd.esri.com/.../index.html">-->
+    <!--<meta property="og:image" content="https://geoxc-apps.bd.esri.com/.../assets/app.png">-->
+    
+    <!-- CALCITE -->
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.10.1/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.10.1/calcite.css"/>
+    
+    <!-- ArcGIS API for JavaScript-->
+    <link href="https://js.arcgis.com/4.30/@arcgis/core/assets/esri/themes/dark/main.css" rel="stylesheet"/>
+    <script src="https://js.arcgis.com/4.30/"></script>
+    
+    <!-- APPLICATION -->
+    <link rel="stylesheet" type="text/css" href="./css/application.css">
+    <script type="module" src="./js/Application.js"></script>
   </head>
-  <body class="">
-
-    <!-- DETAILS -->
-    <div class="js-modal modal-overlay" data-modal="app-details-dialog">
-      <div class="modal-content column-14" aria-labelledby="modal" role="dialog">
-
-        <div class="modal-content-row trailer-half">
-          <div class="font-size-2 text-darkest-gray">Dangermond Preserve Historical Imagery</div>
-          <div class="js-modal-toggle esri-interactive icon-ui-close" aria-label="close-modal"></div>
+  <body class="calcite-mode-dark">
+    <calcite-shell>
+      
+      <!-- HEADER -->
+      <calcite-navigation slot="header">
+        <!-- TITLE AND SNIPPET -->
+        <calcite-navigation-logo slot="logo" icon="collection" heading="Application Title" description="application description"></calcite-navigation-logo>
+        <!-- SHARE AND INFO ACTIONS -->
+        <!--<calcite-action slot="content-end" id="app-share-action" appearance="transparent" scale="m" title="share current options..." text="share current options" icon="link"></calcite-action>-->
+        <calcite-action slot="content-end" id="app-details-action" appearance="transparent" scale="m" title="app details..." text="app details" icon="information"></calcite-action>
+      </calcite-navigation>
+      
+      <!-- LEFT -->
+      <calcite-shell-panel slot="panel-start" position="start" width-scale="m">
+        
+        <calcite-panel>
+          
+          <div id="overview-map-container"></div>
+          
+          <calcite-panel heading="Historical Imagery" class="calcite-mode-light">
+            <div slot="header-actions-end">
+              <calcite-chip id="layer-in-extent-chip" scale="s">0 of 0</calcite-chip>
+            </div>
+            <calcite-list id="layers-list-container" selection-appearance="border" selection-mode="single-persist"></calcite-list>
+          </calcite-panel>
+        
+        </calcite-panel>
+      
+      </calcite-shell-panel>
+      
+      <!-- CENTER -->
+      <calcite-panel id="center-container">
+        <calcite-action-pad id="map-action-pad" layout="horizontal" overlay-positioning="fixed" expand-disabled hidden>
+          <calcite-label layout="inline" style="--calcite-label-margin-bottom:0;margin-left:0.5rem;">
+            <div>opacity</div>
+            <calcite-slider id="layer-opacity-slider" fill-placement="none" min="0.0" max="1.0" value="1.0" step="0.01" ticks="0.2"></calcite-slider>
+          </calcite-label>
+          <calcite-action id="opacity-fade-action" title="Layer Fade - click and hold to fade layer..." icon="arrow-up-down"></calcite-action>
+          <calcite-action id="zoom-window-action" title="Zoom Window - click, hold, then drag..." icon="image-magnifying-glass"></calcite-action>
+          <calcite-action id="print-action" title="Export Map..." icon="print"></calcite-action>
+        </calcite-action-pad>
+        <calcite-block id="print-panel" open hidden>
+          <div id="print-container"></div>
+        </calcite-block>
+        <div id="view-container"></div>
+      </calcite-panel>
+      
+      <!-- SHAREABLE ALERT -->
+      <calcite-alert id="app-share-alert" slot="alerts" kind="success" icon="launch" placement="bottom" auto-close auto-close-duration="medium">
+        <div slot="message">Shareable link has been copied to the clipboard.</div>
+        <calcite-link slot="link" href="#" target="_blank" role="link" title="open in new tab">open in new tab</calcite-link>
+      </calcite-alert>
+      
+      <!-- NOTICES ADN ALERTS -->
+      <calcite-alert id="app-notice" slot="alerts" kind="danger" placement="bottom" width="auto">
+        <div slot="title"></div>
+        <div slot="message"></div>
+      </calcite-alert>
+      
+      <!-- APP DETAILS MODAL -->
+      <calcite-modal id="app-details-modal" slot="modals" kind="brand" aria-labelledby="app-modal-title">
+        <h3 slot="header" id="app-modal-title" class="application-title"></h3>
+        <div slot="content" class="application-description"></div>
+        <div slot="secondary">
+          <calcite-label layout="inline">
+            <span>hide on startup</span>
+            <calcite-checkbox id="hide-startup-checkbox"></calcite-checkbox>
+          </calcite-label>
         </div>
-
-        <div id="app-description-panel" class="panel text-darkest-gray trailer-half">
-          Display various historical imagery in and around the Jack and Laura Dangermond Preserve.
-        </div>
-
-        <div class="panel trailer-half text-center">
-          <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/terms-of-use/" target="_blank" class="link-dark-blue">
-            <span>The Nature Conservancy Terms of Use</span>
-            <span class="icon-ui-link-external"></span>
-          </a>
-        </div>
-
-        <div class="modal-content-row">
-          <div>
-            <img src="./assets/esri_science_of_where.png" class="margin-right-3"> <img src="./assets/The-Nature-Conservancy-logo.jpg" style="height:44px;">
-          </div>
-          <button class="btn btn-white js-modal-toggle">OK</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- LAYER DETAILS-->
-    <div class="js-modal modal-overlay" data-modal="layer-details-dialog">
-      <div class="modal-content column-14" aria-labelledby="modal" role="dialog">
-
-        <div class="modal-content-row trailer-half">
-          <div id="layer-details-title" class="font-size-2 text-darkest-gray"></div>
-          <span class="js-modal-toggle esri-interactive icon-ui-close" aria-label="close-modal"></span>
-        </div>
-
-        <div id="layer-details-description" class="panel trailer-half text-darkest-gray"></div>
-
-        <div class="panel text-center trailer-half">
-          <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/terms-of-use/" target="_blank" class="link-dark-blue">
-            <span>The Nature Conservancy Terms of Use</span>
-            <span class="icon-ui-link-external"></span>
-          </a>
-        </div>
-
-        <div class="modal-content-row">
-          <div>
-            <img src="./assets/esri_science_of_where.png" class="margin-right-3"> <img src="./assets/The-Nature-Conservancy-logo.jpg" style="height:44px;">
-          </div>
-          <button class="btn btn-white js-modal-toggle">OK</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- PRINT SIDE DRAWER -->
-    <div class="drawer drawer-left js-drawer" data-drawer="print-drawer" tabindex="0">
-      <nav class="drawer-nav" role="navigation">
-        <div id="print-node"></div>
-      </nav>
-    </div>
-
-    <!-- TOP NAVIGATION -->
-    <header id="header-panel" class="panel panel-black panel-no-padding padding-left-1 padding-right-1">
-      <!-- APP TITLE -->
-      <span id="app-title-node" class="top-nav-title text-white icon-ui-collection"></span>
-
-      <!-- RIGHT ALIGNED -->
-      <nav class="top-nav-list right" role="navigation">
-
-        <!-- PRINT -->
-        <span class="top-nav-link icon-ui-printer text-white margin-left-1 js-drawer-toggle esri-interactive" title="Print Map" data-drawer="print-drawer"></span>
-
-        <!-- APP DETAILS -->
-        <span class="top-nav-link icon-ui-description text-white js-modal-toggle margin-left-1 esri-interactive" data-modal="app-details-dialog"></span>
-
-      </nav>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <div id="main-container">
-      <!-- LEFT CONTAINER -->
-      <div id="left-container" class="panel panel-dark panel-no-border pane-toggle-target">
-
-        <div id="overview-panel" class="panel panel-no-padding trailer-quarter">
-          <div id="overview-view"></div>
-        </div>
-
-        <div id="opacity-panel" class="panel panel-darkX trailer-quarter">
-          <input id="opacity-input" type="range" min="0.00" max="1.00" value="1.00" step="0.01">
-          <div id="opacity-label" class="font-size--3 avenir-italic text-dark-gray text-lightX">
-            <span>transparent</span>
-            <span>opaque</span>
-          </div>
-        </div>
-
-        <aside id="items-list-container" class="side-nav" aria-role="complementary">
-          <div class="side-nav-title font-size-0">
-            <span class="text-darkest-gray">Historical Imagery</span>
-            <mark id="items-list-count" class="label right" title="Years with imagery in the current view extent">0 of 0</mark>
-          </div>
-          <nav id="items-list" role="navigation" aria-labelledby="sidenav"></nav>
-        </aside>
-
-      </div>
-      <!-- VIEW CONTAINER -->
-      <div id="view-container" class="pane-toggle-source"></div>
-    </div>
+        <calcite-button id="app-details-ok-btn" slot="primary" width="full" hidden>OK</calcite-button>
+      </calcite-modal>
+      
+      <!-- LAYER DETAILS MODAL -->
+      <calcite-modal id="layer-details-modal" slot="modals" kind="brand" aria-labelledby="layer-modal-title" class="calcite-mode-light">
+        <h3 slot="header" id="layer-modal-title"></h3>
+        <div slot="content"></div>
+        <calcite-label slot="content-bottom" style="width:100%;--calcite-label-margin-bottom:0;">
+          
+          <calcite-card style="--calcite-color-foreground-1: var(--calcite-color-background)">
+            <calcite-label layout="inline-space-between">
+              <div></div>
+              <calcite-link href="https://www.nature.org/en-us/about-us/who-we-are/accountability/terms-of-use/" target="_blank" icon-end="launch" style="--calcite-color-text-link:var(--calcite-color-text-1);">
+                <span style="font-size:12pt;">The Nature Conservancy Terms of Use</span>
+              </calcite-link>
+              <div></div>
+            </calcite-label>
+          </calcite-card>
+          
+          <calcite-label layout="inline" style="--calcite-label-margin-bottom:0;margin-top:10px;">
+            <img src="./assets/esri_science_of_where_white.png" alt="Esri">
+            <img src="./assets/The-Nature-Conservancy-logo.jpg" alt="The Nature Conservancy" style="height:44px;">
+          </calcite-label>
+        
+        </calcite-label>
+      
+      </calcite-modal>
+    
+    </calcite-shell>
+    
+    <!-- LOADER -->
+    <calcite-loader id="app-loader" type="indeterminate" scale="l" text="...loading..."></calcite-loader>
+    
+    <template id="layer-item-template">
+      <calcite-list-item>
+        <calcite-meter title="coverage percentage" slot='content-end' fill-type='single' scale='s' value-label style="width:180px;pointer-events:none;"></calcite-meter>
+        <calcite-action title="get imagery details..." slot='content-end' icon="information" appearance="transparent" scale="s" style="margin:0 8px;"></calcite-action>
+      </calcite-list-item>
+    </template>
+  
   </body>
 </html>

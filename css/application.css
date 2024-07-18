@@ -1,0 +1,128 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  background-color: var(--calcite-color-background);
+}
+
+/* Calcite Theme Editor: https://esrips.github.io/calcite-theme-editor/ */
+
+.calcite-mode-dark,
+.calcite-mode-light {
+  color-scheme: dark;
+  --calcite-mode-name: dark;
+  --calcite-color-brand: #52CE13;
+  --calcite-color-brand-hover: #3E9B0E;
+  --calcite-color-brand-press: #33810C;
+  --calcite-color-text-1: #FFFFFF;
+  --calcite-color-text-2: #FFFFFF;
+  --calcite-color-text-3: #FFFFFF;
+  --calcite-ui-text-highlight: #52CE13;
+  --calcite-color-text-inverse: #000000;
+  --calcite-color-text-link: #3E9B0E;
+  --calcite-link-blue-underline: rgba(82, 206, 19, 0.5);
+  --calcite-color-background: #2C3B25;
+  --calcite-color-foreground-1: #24301E;
+  --calcite-color-foreground-2: #1B2416;
+  --calcite-color-foreground-3: #10160E;
+  --calcite-color-inverse: #DBCFE1;
+  --calcite-color-inverse-hover: #B39AC0;
+  --calcite-color-inverse-press: #8B659F;
+  --calcite-color-border-1: #3F4F37;
+  --calcite-color-border-2: #45573D;
+  --calcite-color-border-3: #4C5F42;
+  --calcite-color-border-input: #526747;
+  --calcite-ui-icon-color: currentColor;
+  --calcite-color-status-info: #3E9B0E;
+  --calcite-color-status-success: #36DA43;
+  --calcite-color-status-warning: #FFC900;
+  --calcite-color-status-danger: #FE583E;
+  --calcite-color-status-danger-hover: #FF0015;
+  --calcite-color-status-danger-press: #D90012;
+}
+
+
+.alternate-ui calcite-navigation[slot="header"] {
+  --calcite-navigation-background: var(--calcite-color-foreground-3);
+}
+
+calcite-navigation[slot="header"] calcite-navigation-logo {
+  pointer-events: none;
+  --calcite-color-text-1: var(--calcite-color-brand);
+}
+
+calcite-loader#app-loader {
+  --calcite-loader-size: 8rem;
+  align-self: center;
+  justify-self: center;
+}
+
+calcite-modal {
+  --calcite-modal-content-background: var(--calcite-color-background);
+}
+
+calcite-list-item[selected] {
+  --calcite-color-text-1: var(--calcite-color-brand);
+  --calcite-color-foreground-1: var(--calcite-color-background);
+}
+
+#center-container {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#view-container {
+  padding: 0;
+  margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#overview-map-container {
+  pointer-events: none;
+  margin: 8px;
+  height: 280px;
+  border: 1px solid var(--calcite-color-border-1);
+}
+
+[slot="header-actions-end"] {
+  display: inline-flex;
+}
+
+#layer-in-extent-chip {
+  margin: auto 0.5rem;
+}
+
+#layer-opacity-slider {
+  width: 150px;
+  margin: auto 0.5rem;
+}
+
+.zoom-view-node {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: var(--calcite-color-background);
+  border: solid 1px var(--calcite-color-brand);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.zoom-view-node[hidden] {
+  display: none;
+}
+
+#print-panel[hidden] {
+  display: none;
+}
+
+#layer-details-modal {
+  --calcite-modal-height: 80vh;
+}

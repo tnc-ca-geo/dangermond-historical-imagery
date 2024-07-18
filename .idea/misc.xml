@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JavaScriptSettings">
-    <option name="languageLevel" value="ES6" />
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="91f878b7-102f-45a6-8532-b7adacf5cadb" />
   </component>
 </project>

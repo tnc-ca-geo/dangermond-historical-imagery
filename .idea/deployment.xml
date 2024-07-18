@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="apl web server">
+  <component name="PublishConfigData" autoUpload="On explicit save action" serverName="APL-APPS2 - DEV" overwriteAll="false" deleteMissingItems="true" createEmptyFolders="true" confirmBeforeUploading="false" confirmBeforeDeletion="false" autoUploadExternalChanges="true" showAutoUploadSettingsWarning="false">
+    <option name="confirmBeforeDeletion" value="false" />
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
-      <paths name="apl portal">
+      <paths name="APL-APPS - DEV">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="apl web server">
-        <serverdata>
-          <mappings>
-            <mapping deploy="\DangermondPreserve\HistoricalImagery" local="$PROJECT_DIR$" web="/DangermondPreserve/HistoricalImagery" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="apl web server rc">
+      <paths name="APL-APPS - PROD">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="apl web server root">
+      <paths name="APL-APPS2 - DEV">
+        <serverdata>
+          <mappings>
+            <mapping deploy="\DangermondPreserve\HistoricalImagery2" local="$PROJECT_DIR$" web="/DangermondPreserve/HistoricalImagery2" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="APL-APPS2 - PROD">
+        <serverdata>
+          <mappings>
+            <mapping deploy="\DangermondPreserve\HistoricalImagery2" local="$PROJECT_DIR$" web="/DangermondPreserve/HistoricalImagery2" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="APL-APPS4 - DEV">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
@@ -31,6 +46,6 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myAutoUpload" value="ALWAYS" />
+    <option name="myAutoUpload" value="ON_EXPLICIT_SAVE" />
   </component>
 </project>

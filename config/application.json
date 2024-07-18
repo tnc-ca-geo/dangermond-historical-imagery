@@ -1,27 +1,17 @@
 {
   "title": "Jack & Laura Dangermond Preserve - Historical Imagery",
-  "appid": "",
-  "group": "",
-  "webscene": "",
-  "webmap": "3f653b10ba39463db25322a69d28bc81",
+  "snippet": "historical imagery of the Dangermond Preserve from 1850 to 2023",
+  "description": "View historical imagery of the Dangermond Preserve from 1850 to 2023.",
   "portalUrl": "https://www.arcgis.com",
   "oauthappid": "",
-  "proxyUrl": "",
-  "units": "dual",
-  "helperServices": {
-    "geometry": {
-      "url": null
-    },
-    "printTask": {
-      "url": null
-    },
-    "elevationSync": {
-      "url": null
-    },
-    "geocode": [
-      {
-        "url": null
-      }
-    ]
-  }
+  "authMode": "anonymous",
+  "apiKey": null,
+  "group": "",
+  "webmap": "3f653b10ba39463db25322a69d28bc81",
+  "webscene": "",
+  "viewProps": {
+    "alphaCompositingEnabled": true
+  },
+  "container": "view-container",
+  "shareable": []
 }
